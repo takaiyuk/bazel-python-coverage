@@ -1,0 +1,48 @@
+load("@pip//:requirements.bzl", "requirement")
+
+py_library(
+    name = "lib",
+    srcs = glob(["src/**/*.py"]),
+    imports = ["."],
+    deps = [
+        requirement("boto3"),
+    ]
+)
+
+py_binary(
+    name = "binary",
+    srcs = ["src/main.py"],
+    main = "main.py",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lib",
+    ],
+)
+
+py_test(
+    name = "test",
+    srcs = glob(["tests/**/*.py"]),
+    main = "tests/run_pytest.py",
+    legacy_create_init = False,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lib",
+        requirement("pytest"),
+        # requirement("pytest-cov"),
+        # requirement("coverage"),
+    ],
+)
+
+py_test(
+    name = "test_boto3",
+    srcs = glob(["tests-boto3/**/*.py"]),
+    main = "tests-boto3/run_pytest.py",
+    legacy_create_init = False,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lib",
+        requirement("pytest"),
+        # requirement("pytest-cov"),
+        # requirement("coverage"),
+    ],
+)
